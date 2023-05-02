@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <button onclick="convertToBase64()">轉換成Base64</button>
+
+</body>
+
+<script>
+function convertToBase64() {
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function () {
+    const base64String = reader.result.split(',')[1];
+    console.log(base64String);
+  };
+}
+</script>
+
+
+
+</html>

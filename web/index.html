@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Bare - Start Bootstrap Template</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="js/vue.js"></script>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="js/popper.min.js" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+   
+</head>
+
+<body>
+    <!-- Page content-->
+    <div class="container">
+
+        <div class="text-center mt-5">
+            <div id="app" class="container-fluid">
+                <h1>My App</h1>
+                <input type="file" id="fileInput">
+                <el-button type="primary" plain @click="uploadFile">開始轉檔</el-button>       
+                <el-divider></el-divider>
+                <form>
+                    <label>Name:</label>
+                    <input v-model="name">
+                    <label>Email:</label>
+                    <input v-model="email">
+                    <button class="btn btn-primary" type="button" @click="addUser">Add User</button>
+                   <!-- <button class="btn btn-primary" type="button" @click="downloadFile">download</button>-->
+                </form> 
+                <template>
+                    <el-table
+                      :data="users"
+                      stripe
+                      style="width: 100%">
+                      <el-table-column
+                        prop="id"
+                        label="ID"
+                        width="180">
+                      </el-table-column>
+                      <el-table-column
+                        prop="name"
+                        label="姓名"
+                        width="180">
+                      </el-table-column>
+                      <el-table-column
+                        prop="email"
+                        label="郵件">
+                      </el-table-column>
+                    </el-table>
+                  </template>                
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script>
+ 
+    new Vue({
+        el: '#app',
+        data: {
+            name: '',
+            email: '',
+            users: [],
+        },
+        mounted() {
+            this.getUsers();
+        },
+        methods: {
+            addUser() {
+                eel.add_user(this.name, this.email)((result) => {
+                    this.getUsers();
+                    this.name = '';
+                    this.email = '';
+                    alert(result);
+                });
+            },
+            getUsers() {
+                eel.get_users()((result) => {
+                    this.users = result;
+                    console.log(this.users)
+                });
+            },
+            downloadFile() {
+                console.log("downloadFile")
+                eel.download_file()((response) => {
+                    const blob = new Blob([response.data], { type: response.type });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', response.name);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+
+            },
+            uploadFile() {
+                const fileInput = document.getElementById('fileInput');
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    const base64String = reader.result.split(',')[1];
+                    console.log(base64String);
+                    eel.transferOrder(base64String,file.name)((filename) => {    
+                        const url = filename
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download',filename);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                };
+            }
+
+        }
+    });
+</script>
+
+</html>
