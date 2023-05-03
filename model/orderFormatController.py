@@ -22,5 +22,5 @@ class OrderFormatCtrl:
     
     # 查詢OrderFormat資料表中,所有的order_no
     def queryAllOrderNoList(self):
-        return [Orders.order_no for Orders in self.session.query(OrderFormat).all()]
+        return [str(Orders.order_no).strip() for Orders in self.session.query(OrderFormat).all()]
  

@@ -26,7 +26,7 @@ class TransferOrderEel:
         orderRecordList = []
         preOrderNo = ''  # 上一筆訂單編號
         for index, row in df.iterrows():
-            orderNo = row['訂單編號']
+            orderNo = str(row['訂單編號']).strip()
 
             # 判斷沒有重覆的資料再繼續轉檔
             if orderNo in self.allOrderNoList: continue
