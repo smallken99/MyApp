@@ -34,7 +34,7 @@ def download_file():
     with open(fileFullPath, 'rb') as f:
         excel_data = f.read()
         excel_b64 = base64.b64encode(excel_data).decode('utf-8')
-        return excel_b64
+        return {"name": filename, "data": excel_b64, "type": 'application/octet-stream'}
  
 
 
