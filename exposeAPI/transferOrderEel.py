@@ -4,17 +4,14 @@ from model.orderFormatController import OrderFormatCtrl
 from model.orderFormatVO import OrderFormat
 
 # 蝦皮訂單轉檔
-
-
 class TransferOrderEel:
     def __init__(self, session):
         self.orderFormatDAO = OrderFormatCtrl(session)
 
     def transferOrder(self, base64_string, filenName):
-        # print(base64_string)
-        # uploadFile = Uploadfile().upload_file(base64_string,filenName)
         # 解碼base64字串
         excel_bytes = base64.b64decode(base64_string)
+
         # 使用pandas讀取Excel數據
         df = pd.read_excel(excel_bytes, sheet_name='orders')
 
@@ -22,8 +19,7 @@ class TransferOrderEel:
         newdf = pd.DataFrame(columns=['訂單編號', '發票類型', '載具', '載具顯碼', '載具隱碼', '捐贈對象', '買方統編', '買方名稱', '買方地址',
                              '買方電話', '買方電子信箱', '品名', '課稅別', '數量', '單價(含稅)', '小計金額(含稅)', '商品備註(最多40個字)', '總備註(最多200個字)'])
 
-        # 現在您可以對讀取的數據進行處理
-        
+        # 現在您可以對讀取的數據進行處理        
         orderRecordList = []
         preOrderNo = ''  # 上一筆訂單編號
         for index, row in df.iterrows():
@@ -42,7 +38,7 @@ class TransferOrderEel:
             buyerName = row['買家帳號'] if preOrderNo != orderNo else ''
 
             # 品名
-            productItem = row['商品選項名稱']+f'[{orderNo}]' if preOrderNo != orderNo else row['商品選項名稱']
+            productItem = '[' + row['收件者姓名'] + ']'+row['商品選項名稱'] if preOrderNo != orderNo else row['商品選項名稱']
 
             # 數量
             quantity = int(row['數量'])
