@@ -143,7 +143,7 @@
                         for (var i = 0; i < file_contents.length; i++) {
                             file_data[i] = file_contents.charCodeAt(i);
                         }
-                                // 創建Blob對象
+                        // 創建Blob對象
                         var blob = new Blob([file_data], { type: response.type });                                     
                         // 創建URL對象並設置<a>元素的href屬性和download屬性
                         var file_url = URL.createObjectURL(blob);
