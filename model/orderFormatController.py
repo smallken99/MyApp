@@ -8,11 +8,13 @@ class OrderFormatCtrl:
     def add_orderFormat(self,OrderFormat):
         self.session.add(OrderFormat)
         self.session.commit()
+        self.session.close()
         return "新增資料成功!"  
 
     def add_all(self, data_list):
         self.session.add_all(data_list) 
         self.session.commit()
+        self.session.close()
         return "批次新增資料成功!" 
 
    # 是否已經存在資料庫中了
