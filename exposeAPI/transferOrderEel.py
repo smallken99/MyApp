@@ -8,6 +8,8 @@ from config import WORK_FILE
 class TransferOrderEel:
     def __init__(self, session):
         self.orderFormatDAO = OrderFormatCtrl(session)
+        self.allOrderNoList = self.orderFormatDAO.queryAllOrderNoList()
+        #print(self.allOrderNoList)
 
     def transferOrder(self, base64_string, filenName):
         # 解碼base64字串
@@ -27,7 +29,7 @@ class TransferOrderEel:
             orderNo = row['訂單編號']
 
             # 判斷沒有重覆的資料再繼續轉檔
-            if self.orderFormatDAO.isDuplicate(orderNo): continue
+            if orderNo in self.allOrderNoList: continue
 
             # 發票類型
             invoiceType = 'B2C' if preOrderNo != orderNo else ''

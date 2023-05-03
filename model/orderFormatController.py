@@ -19,4 +19,8 @@ class OrderFormatCtrl:
     def isDuplicate(self, orderNo):
         result = self.session.query(OrderFormat).filter_by(order_no=orderNo).first()
         return result is not None
+    
+    # 查詢OrderFormat資料表中,所有的order_no
+    def queryAllOrderNoList(self):
+        return [Orders.order_no for Orders in self.session.query(OrderFormat).all()]
  
