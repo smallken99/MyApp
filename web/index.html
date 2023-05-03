@@ -136,11 +136,20 @@
                 reader.onload = function () {
                     const base64String = reader.result.split(',')[1];
                     console.log(base64String);
-                    eel.transferOrder(base64String,file.name)((filename) => {    
-                        const url = filename
+                    eel.transferOrder(base64String,file.name)((response) => {    
+                        var file_contents = atob(response.data);
+                        // 將base64字串解碼為二進位數組
+                        var file_data = new Uint8Array(file_contents.length);   
+                        for (var i = 0; i < file_contents.length; i++) {
+                            file_data[i] = file_contents.charCodeAt(i);
+                        }
+                                // 創建Blob對象
+                        var blob = new Blob([file_data], { type: response.type });                                     
+                        // 創建URL對象並設置<a>元素的href屬性和download屬性
+                        var file_url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download',filename);
+                        link.href = file_url;
+                        link.setAttribute('download', response.name);
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
