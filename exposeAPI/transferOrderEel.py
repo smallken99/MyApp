@@ -2,6 +2,7 @@ import pandas as pd
 import base64
 from model.orderFormatController import OrderFormatCtrl
 from model.orderFormatVO import OrderFormat
+from config import WORK_FILE
 
 # 蝦皮訂單轉檔
 class TransferOrderEel:
@@ -86,6 +87,12 @@ class TransferOrderEel:
 
         # 將數據保存為Excel文件
         newFileName = '轉檔後_'+filenName
-        newdf.to_excel(f'web/{newFileName}', sheet_name='Worksheet', index=False)
+        fullFileName = f'{WORK_FILE}{newFileName}'
+        newdf.to_excel(fullFileName, sheet_name='Worksheet', index=False)
 
-        return newFileName
+        # 讀取 Excel 檔案，轉成 base64 字串
+        with open(fullFileName, "rb") as excel_file:
+            excel_data = excel_file.read()
+            excel_base64 = base64.b64encode(excel_data).decode("utf-8")
+
+        return {"name": newFileName, "data": excel_base64, "type": 'application/octet-stream'}
