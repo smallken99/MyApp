@@ -36,7 +36,8 @@
                     <label>Email:</label>
                     <input v-model="email">
                     <button class="btn btn-primary" type="button" @click="addUser">Add User</button>
-                    <button class="btn btn-primary" type="button" @click="downloadFile">download</button>
+                    <!--<button class="btn btn-primary" type="button" @click="downloadFile1">download</button>
+                    <button class="btn btn-primary" type="button" @click="downloadFile2">download2</button>-->
                 </form> 
                 <template>
                     <el-table
@@ -63,6 +64,7 @@
 
         </div>
     </div>
+
 </body>
 <script>
  
@@ -91,9 +93,9 @@
                     console.log(this.users)
                 });
             },
-            downloadFile() {
+            downloadFile1() {
                 console.log("downloadFile")
-                eel.download_file()((response) => {
+                eel.download_file1()((response) => {
                     var file_contents = atob(response.data);
                     // 將base64字串解碼為二進位數組
                     var file_data = new Uint8Array(file_contents.length);   
@@ -110,9 +112,22 @@
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+            })},
+            downloadFile2() {
+                console.log("downloadFile")
+                eel.download_file2()((response) => {
+                    const blob = new Blob([response.data], { type: response.type });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', response.name);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 });
 
             },
+
             uploadFile() {
                 const fileInput = document.getElementById('fileInput');
                 const file = fileInput.files[0];

@@ -28,14 +28,25 @@ eel.expose(transferOrderEel_eel.transferOrder)
 
 
 @eel.expose
-def download_file():
-    filename = "order.xlsx"
+def download_file1():
+    filename = "order.xlsx" # 此方法也可以用在純文字檔
     fileFullPath = WORK_FILE + filename
     with open(fileFullPath, 'rb') as f:
         excel_data = f.read()
         excel_b64 = base64.b64encode(excel_data).decode('utf-8')
         return {"name": filename, "data": excel_b64, "type": 'application/octet-stream'}
- 
+    
+
+@eel.expose
+def download_file2():
+    filename = "example.txt"
+    fileFullPath = WORK_FILE + filename
+    with open(fileFullPath, "r",encoding="utf-8") as f:
+        content = f.read()
+    file_type = "text/plain"
+    #file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    return {"name": filename, "data": content, "type": file_type}
+
 
 
 
