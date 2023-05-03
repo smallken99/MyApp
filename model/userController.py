@@ -9,6 +9,7 @@ class UserCtrl:
         user = User(name, email)
         self.session.add(user)
         self.session.commit()
+        self.session.close()
         return "資料新增成功!"        
 
     def get_users(self):
