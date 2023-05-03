@@ -15,9 +15,6 @@ class TransferOrderEel:
         # 解碼base64字串
         excel_bytes = base64.b64decode(base64_string)
 
-        # 判斷沒有重覆的資料再繼續轉檔
-        allOrderNoList = self.orderFormatDAO.queryAllOrderNoList()
-
         # 使用pandas讀取Excel數據
         df = pd.read_excel(excel_bytes, sheet_name='orders')
 
@@ -32,7 +29,7 @@ class TransferOrderEel:
             orderNo = str(row['訂單編號']).strip()
 
             # 判斷沒有重覆的資料再繼續轉檔
-            if orderNo in allOrderNoList: continue
+            if  self.orderFormatDAO.isDuplicate(orderNo) : continue
 
             # 發票類型
             invoiceType = 'B2C' if preOrderNo != orderNo else ''
