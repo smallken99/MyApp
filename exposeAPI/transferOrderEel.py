@@ -61,10 +61,23 @@ class TransferOrderEel:
 
             # 先保存資料,最後再一起存資料庫
             orderRecordList.append(OrderFormat(orderNo,buyerName,productItem,quantity,unitPrice,SubtotalAmount))
+
+            # 保存在excel資料表
+            newdf = pd.concat([newdf, pd.DataFrame([new_data])], ignore_index=True)
+
+            # 有支付運費的情況
+            farePrice = int(row['買家支付運費']) 
+            if farePrice > 0:
+                new_data2 = {'訂單編號':orderNo, '品名': '運費', '課稅別': '應稅',
+                             '數量': 1 , '單價(含稅)': farePrice, 
+                            '小計金額(含稅)':farePrice}
+                # 先保存資料,最後再一起存資料庫
+                orderRecordList.append(OrderFormat(orderNo,'','運費',1,farePrice,farePrice))                                
+                # 保存在excel資料表
+                newdf = pd.concat([newdf, pd.DataFrame([new_data2])], ignore_index=True)
+
             # 保存上一筆資料
             preOrderNo = orderNo
-            # 保存在excel資料表
-            newdf.loc[index] = new_data
 
         # 批次新增資料庫
         self.orderFormatDAO.add_all(orderRecordList)
