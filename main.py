@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from config import DB_URI,WORK_FILE,DB_URI_MYSQL
 from model.userVO import User
 from model.orderFormatVO import OrderFormat
-
+import base64
 
 
 engine = create_engine(DB_URI, echo=True)
@@ -29,13 +29,14 @@ eel.expose(transferOrderEel_eel.transferOrder)
 
 @eel.expose
 def download_file():
-    filename = "example.txt"
+    filename = "order.xlsx"
     fileFullPath = WORK_FILE + filename
-    with open(fileFullPath, "r",encoding="utf-8") as f:
-        content = f.read()
-    file_type = "text/plain"
-    #file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    return {"name": filename, "data": content, "type": file_type}
+    with open(fileFullPath, 'rb') as f:
+        excel_data = f.read()
+        excel_b64 = base64.b64encode(excel_data).decode('utf-8')
+        return excel_b64
+ 
+
 
 
 
