@@ -88,10 +88,10 @@
                     alert(result);
                 });
             },
-            getUsers() {
+            getUsers() {                
                 eel.get_users()((result) => {
                     this.users = result;
-                    console.log(this.users)
+                    console.log(this.users)                    
                 });
             },
             downloadFile1() {
@@ -130,6 +130,7 @@
             },
 
             uploadFile() {
+                const sentMsg = this.$notify; 
                 const fileInput = document.getElementById('fileInput');
                 const file = fileInput.files[0];
                 const reader = new FileReader();
@@ -154,6 +155,15 @@
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
+                        // 額外的訊息回傳
+                        if(response.msg !== ''){
+                            sentMsg.error({
+                                title: '提示',
+                                message: response.msg,
+                                duration: 0                                
+                            })
+                        }
+
                     })
                 };
             }
