@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -13,7 +14,8 @@ class OrderFormat(Base):
     quantity = Column(Integer, nullable=False)
     unit_price_tax_included = Column(Float, nullable=False)
     subtotal_tax_included = Column(Float, nullable=False)
-
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
     def __init__(self, order_no, buyer_name, product_name, quantity, unit_price_tax_included, subtotal_tax_included):
         self.order_no = order_no
         self.buyer_name = buyer_name
@@ -30,5 +32,6 @@ class OrderFormat(Base):
             'product_name': self.product_name,
             'quantity': self.quantity,
             'unit_price_tax_included': self.unit_price_tax_included,
-            'subtotal_tax_included': self.subtotal_tax_included
+            'subtotal_tax_included': self.subtotal_tax_included,
+            'created_at': self.created_at
         }
