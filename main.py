@@ -1,20 +1,38 @@
 import eel
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from config import DB_URI,WORK_FILE,DB_URI_MYSQL
 from model.userVO import User
 from model.orderFormatVO import OrderFormat
+from sqlalchemy.engine.reflection import Inspector
 import base64
 
 
 engine = create_engine(DB_URI, echo=True)
 Session = sessionmaker(bind=engine)
 
+# 初始化資料表
 # Create a declarative base object
 Base = declarative_base()
 # Add User Object to Base and create the table
 Base.metadata.create_all(bind=engine, tables=[User.__table__,OrderFormat.__table__])
+
+
+# 以下建立欄位
+# 檢查欄位是否已經存在
+table_name = 'orderformat'
+column_name = 'created_at'
+inspector = Inspector.from_engine(engine)
+if 'orderformat' in inspector.get_table_names():
+    columns = [c['name'] for c in inspector.get_columns(table_name)]
+    if column_name not in columns:
+        # 新增 created_at 欄位
+        print(f'新增 {column_name} 欄位')
+        with engine.connect() as conn:
+            stmt = text("ALTER TABLE orderformat ADD COLUMN created_at DATETIME DEFAULT NOW()")
+            conn.execute(stmt)
+
 
 from exposeAPI.userEel import UserAPI
 user_eel = UserAPI(Session)
