@@ -97,4 +97,7 @@ class TransferOrderEel:
             excel_data = excel_file.read()
             excel_base64 = base64.b64encode(excel_data).decode("utf-8")
 
-        return {"name": newFileName, "data": excel_base64, "type": 'application/octet-stream'}
+        return {"name": newFileName, 
+                "data": excel_base64, 
+                "type": 'application/octet-stream',
+                "msg" : ''}
