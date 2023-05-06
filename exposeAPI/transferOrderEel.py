@@ -70,7 +70,7 @@ class TransferOrderEel:
 
             # 有支付運費的情況
             farePrice = int(row['買家支付運費']) 
-            if farePrice > 0:
+            if (farePrice > 0) and (preOrderNo != orderNo):
                 new_data2 = {'訂單編號':orderNo, '品名': '運費', '課稅別': '應稅',
                              '數量': 1 , '單價(含稅)': farePrice, 
                             '小計金額(含稅)':farePrice}
